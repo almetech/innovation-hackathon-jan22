@@ -1,0 +1,19 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.custom-dark-bg {
+  background-color: #2C2C2C;
+}
+
+.custom-primary {
+  color: #EB11D9;
+}
+
+.custom-light {
+  color: #C4C4C4;
+}
+
+.custom-primary-btn {
+  background-color: #EB11D9;
+}
