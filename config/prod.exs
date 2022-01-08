@@ -18,7 +18,7 @@ config :eoq, EoqWeb.Endpoint,
   check_origin: [
     "https://alme.tech",
     "https://www.alme.tech"
-  ],
+  ]
 
 # Do not print debug messages in production
 config :logger, level: :info
