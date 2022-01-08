@@ -22,12 +22,13 @@ defmodule Eoq.Inventory do
     preload_query =
       from pp in ProductParam,
       order_by: [desc: :inserted_at],
-      limit: 1
+      distinct: pp.product_id
 
     query =
       from p in Product,
       where: p.seller_id == ^seller_id,
       preload: [product_params: ^preload_query]
+
     Repo.all(query)
   end
 

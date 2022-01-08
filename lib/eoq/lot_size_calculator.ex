@@ -62,6 +62,7 @@ defmodule Eoq.LotSizeCalculator do
       [product_param] ->
         if product_param.demand_daily != demand do
           Inventory.update_product_param!(%{demand_daily: demand, lot_size: eoq}, product_param.id)
+          EoqWeb.Endpoint.broadcast!("products:lobby", "new_msg", %{product_id: product.id, demand_daily: demand, lot_size: eoq})
           Logger.info("Product param #{product_param.id} updated with eoq #{eoq}, demand #{demand}")
         end
       _ ->

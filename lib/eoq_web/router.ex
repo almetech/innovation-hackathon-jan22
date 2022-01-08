@@ -25,7 +25,7 @@ defmodule EoqWeb.Router do
   end
 
   # Other scopes may use custom stacks.
-  scope "/api", EoqWeb.Api do
+  scope "/api", EoqWeb.Api, as: :api do
     pipe_through :api
 
     post "/orders", OrderController, :create
