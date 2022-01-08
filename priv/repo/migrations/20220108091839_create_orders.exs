@@ -6,7 +6,7 @@ defmodule Eoq.Repo.Migrations.CreateOrders do
       add :id, :binary_id, primary_key: true
       add :quantity, :integer
       add :price, :float
-      add :product_id, references(:products, on_delete: :nothing, type: :binary_id)
+      add :product_id, references(:products, on_delete: :delete_all, type: :binary_id)
       add :date, :date
 
       timestamps()

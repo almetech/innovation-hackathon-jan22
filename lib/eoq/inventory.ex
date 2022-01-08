@@ -31,6 +31,18 @@ defmodule Eoq.Inventory do
     Repo.all(query)
   end
 
+  def all_products do
+    preload_query =
+      from pp in ProductParam,
+      order_by: [desc: :inserted_at],
+      limit: 1
+
+    query =
+      from p in Product,
+      preload: [product_params: ^preload_query]
+    Repo.all(query)
+  end
+
   @doc """
   Gets a single product.
 
@@ -101,6 +113,13 @@ defmodule Eoq.Inventory do
     |> Repo.insert!()
   end
 
+  def update_product_param!(attrs, product_param_id) do
+    product_param = Repo.get!(ProductParam, product_param_id)
+    product_param
+    |> ProductParam.changeset(attrs)
+    |> Repo.update!()
+  end
+
   @doc """
   Deletes a product.
 
@@ -161,9 +180,8 @@ defmodule Eoq.Inventory do
   """
   def get_order!(id), do: Repo.get!(Order, id)
 
-  def save_order(ext_order_params) do
-    seller = Account.get_seller_by_external_id!(ext_order_params["seller_id"])
-    product = get_product_by_external_id!(ext_order_params["product_id"], seller.id)
+  def save_order(ext_order_params, seller_id) do
+    product = get_product_by_external_id!(ext_order_params["product_id"], seller_id)
     quantity = ext_order_params["quantity"]
     date = ext_order_params["date"]
 
@@ -189,7 +207,6 @@ defmodule Eoq.Inventory do
       date: date
     })
     |> Repo.insert(conflict_target: [:product_id, :date], on_conflict: [inc: [quantity: quantity]])
-    |> IO.inspect
   end
 
   @doc """
@@ -262,8 +279,18 @@ defmodule Eoq.Inventory do
 
     query =
       from o in Order,
-      where: o.date >= ago(500, "day"),
+      where: o.date >= ago(30, "day"),
       where: o.product_id == ^product_id
+
+    Repo.all(query)
+  end
+
+  def latest_product_params do
+    query =
+      from pp in ProductParam,
+      where: is_nil(pp.lot_size),
+      distinct: pp.product_id,
+      select: pp.product_id
 
     Repo.all(query)
   end

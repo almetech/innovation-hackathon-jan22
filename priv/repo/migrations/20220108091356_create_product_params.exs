@@ -15,7 +15,7 @@ defmodule Eoq.Repo.Migrations.CreateProductParams do
       add :lead_time_days, :integer
       add :review_time_days, :integer
       add :lot_size, :integer
-      add :product_id, references(:products, on_delete: :nothing, type: :binary_id)
+      add :product_id, references(:products, on_delete: :delete_all, type: :binary_id)
 
       timestamps()
     end

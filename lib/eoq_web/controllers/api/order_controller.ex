@@ -1,4 +1,4 @@
-defmodule EoqWeb.OrderController do
+defmodule EoqWeb.Api.OrderController do
   use EoqWeb, :controller
 
   alias Eoq.Inventory
@@ -9,15 +9,15 @@ defmodule EoqWeb.OrderController do
   # Params:
   # {
   #   order: {
-  #     seller_id: string,
   #     product_id: string,
   #     order_id: string,
   #     quantity: integer,
-  #     price: float
+  #     price: float,
+  #     date: ISO8601 date (optional)
   #   }
   # }
   def create(conn, %{"order" => order_params}) do
-    with {:ok, %Order{} = order} <- Inventory.save_order(order_params) do
+    with {:ok, %Order{}} <- Inventory.save_order(order_params, conn.assigns.seller_id) do
       send_resp(conn, :created, "")
     end
   end

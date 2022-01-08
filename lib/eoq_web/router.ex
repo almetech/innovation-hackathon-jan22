@@ -13,8 +13,7 @@ defmodule EoqWeb.Router do
 
   pipeline :api do
     plug :accepts, ["json"]
-
-    resources "/orders", EoqWeb.OrderController, only: [:create]
+    plug EoqWeb.TokenAuth
   end
 
   scope "/", EoqWeb do
@@ -26,9 +25,15 @@ defmodule EoqWeb.Router do
   end
 
   # Other scopes may use custom stacks.
-  # scope "/api", EoqWeb do
-  #   pipe_through :api
-  # end
+  scope "/api", EoqWeb.Api do
+    pipe_through :api
+
+    post "/orders", OrderController, :create
+
+    post "/products", ProductController, :create
+    put "/products", ProductController, :update
+  end
+
   def assign_default_seller(conn, _) do
     conn
     |> Plug.Conn.assign(:seller_id, "3daa0587-9327-4112-a79a-d5cc1482a52d")

@@ -12,6 +12,6 @@ defmodule Eoq.Repo.Migrations.CreateProducts do
     end
 
     create index(:products, [:seller_id])
-    create index(:products, [:external_product_id])
+    create unique_index(:products, [:external_product_id])
   end
 end

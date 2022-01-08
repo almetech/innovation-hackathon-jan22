@@ -15,9 +15,10 @@ defmodule Eoq.Application do
       # Start the PubSub system
       {Phoenix.PubSub, name: Eoq.PubSub},
       # Start the Endpoint (http/https)
-      EoqWeb.Endpoint
+      EoqWeb.Endpoint,
       # Start a worker by calling: Eoq.Worker.start_link(arg)
       # {Eoq.Worker, arg}
+      Eoq.LotSizeCalculator
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
