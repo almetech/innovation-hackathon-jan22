@@ -14,7 +14,11 @@ config :eoq, EoqWeb.Endpoint,
   http: [port: {:system, "PORT"}],
   url: [scheme: "https", host: "www.alme.tech", port: 443],
   #force_ssl: [rewrite_on: [:x_forwarded_proto]],
-  cache_static_manifest: "priv/static/cache_manifest.json"
+  cache_static_manifest: "priv/static/cache_manifest.json",
+  check_origin: [
+    "https://alme.tech",
+    "https://www.alme.tech"
+  ],
 
 # Do not print debug messages in production
 config :logger, level: :info
