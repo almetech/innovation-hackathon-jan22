@@ -1,5 +1,38 @@
 # Eoq
 
+### Schema
+
+Seller
+======
+name: string
+
+Product
+=======
+seller_id: references(Seller)
+name: string
+
+ProductParam
+============
+product_id: references(Product)
+cost_ordering
+cost_holding
+cost_stockout
+price
+demand_cumulative
+demand_daily
+demand_std_deviation
+service_level
+lead_time
+eoq
+timestamp
+
+Order
+=====
+product_id: string
+quantity: string
+
+### Setup
+
 To start your Phoenix server:
 
   * Install dependencies with `mix deps.get`

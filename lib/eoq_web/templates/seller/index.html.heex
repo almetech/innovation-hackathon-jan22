@@ -1,0 +1,26 @@
+<h1 class="text-xl font-bold">Listing Sellers</h1>
+
+<table class="mt-10">
+  <thead>
+    <tr class="border-b border-gray-500">
+      <th>Name</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+<%= for seller <- @sellers do %>
+    <tr>
+      <td><%= seller.name %></td>
+
+      <td>
+        <span><%= link "Show", to: Routes.seller_path(@conn, :show, seller) %></span>
+        <span><%= link "Edit", to: Routes.seller_path(@conn, :edit, seller) %></span>
+        <span><%= link "Delete", to: Routes.seller_path(@conn, :delete, seller), method: :delete, data: [confirm: "Are you sure?"] %></span>
+      </td>
+    </tr>
+<% end %>
+  </tbody>
+</table>
+
+<span><%= link "New Seller", to: Routes.seller_path(@conn, :new), class: "inline-block mt-10 hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-900 rounded shadow" %></span>

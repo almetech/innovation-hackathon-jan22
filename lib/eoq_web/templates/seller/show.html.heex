@@ -1,0 +1,13 @@
+<h1>Show Seller</h1>
+
+<ul>
+
+  <li>
+    <strong>Name:</strong>
+    <%= @seller.name %>
+  </li>
+
+</ul>
+
+<span><%= link "Edit", to: Routes.seller_path(@conn, :edit, @seller) %></span> |
+<span><%= link "Back", to: Routes.seller_path(@conn, :index) %></span>

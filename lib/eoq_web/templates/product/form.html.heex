@@ -1,0 +1,25 @@
+<.form let={f} for={@changeset} action={@action} class="my-5">
+  <div>
+    <%= label f, :name, class: "custom-label block font-bold" %>
+    <%= text_input f, :name, class: "custom-input w-full" %>
+  </div>
+
+  <div class="mt-5">
+    <%= label f, :external_product_id, "Product ID/SKU", class: "custom-label block font-bold" %>
+    <%= text_input f, :external_product_id, class: "custom-input w-full" %>
+  </div>
+
+  <div class="mt-5">
+    <%= label f, :lead_time_days, "Frequency of ordering in days", class: "custom-label block font-bold" %>
+    <%= text_input f, :review_time_days, class: "custom-input w-full" %>
+  </div>
+
+  <div class="mt-5">
+    <%= label f, :lead_time_days, "Days from order to delivery", class: "custom-label block font-bold" %>
+    <%= text_input f, :lead_time_days, class: "custom-input w-full" %>
+  </div>
+
+  <div>
+    <%= submit "Save", class: "custom-button mt-5" %>
+  </div>
+</.form>
