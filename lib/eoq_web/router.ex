@@ -22,7 +22,7 @@ defmodule EoqWeb.Router do
     get "/", PageController, :index
     resources "/sellers", SellerController
     resources "/products", ProductController
-    post "/randomize", ProductController, :randomize
+    get "/reset", ProductController, :reset
   end
 
   # Other scopes may use custom stacks.

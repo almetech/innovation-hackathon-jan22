@@ -72,7 +72,7 @@ defmodule EoqWeb.ProductController do
     |> redirect(to: Routes.product_path(conn, :index))
   end
 
-  def randomize(conn, _) do
+  def reset(conn, _) do
     Inventory.randomize(conn.assigns.seller_id)
     Eoq.Calculator.run_all_sync()
     conn
