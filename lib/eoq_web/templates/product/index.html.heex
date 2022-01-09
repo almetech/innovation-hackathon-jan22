@@ -1,6 +1,9 @@
 <h1 class="text-xl font-bold">Products</h1>
 
-<span><%= link "+ Add product", to: Routes.product_path(@conn, :new), class: "custom-button my-10" %></span>
+<div class="my-10 flex gap-5">
+  <%= link "+ Add product", to: Routes.product_path(@conn, :new), class: "custom-button" %>
+  <%= link "Generate random data", to: Routes.product_path(@conn, :randomize), class: "custom-button-secondary-large", method: :post %>
+</div>
 
 <%= for product <- @products do %>
   <div class="w-full mb-10 lg:max-w-full lg:flex">

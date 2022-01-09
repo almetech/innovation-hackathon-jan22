@@ -105,4 +105,14 @@ defmodule Eoq.Account do
   def change_seller(%Seller{} = seller, attrs \\ %{}) do
     Seller.changeset(seller, attrs)
   end
+
+  def default_seller_id do
+    seller =
+      case Repo.all(Seller) do
+        [] -> Repo.insert!(%Seller{name: "Default seller", external_seller_id: "SELLER1"})
+        [s | _] -> s
+      end
+
+    seller.id
+  end
 end

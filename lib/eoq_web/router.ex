@@ -22,6 +22,7 @@ defmodule EoqWeb.Router do
     get "/", PageController, :index
     resources "/sellers", SellerController
     resources "/products", ProductController
+    post "/randomize", ProductController, :randomize
   end
 
   # Other scopes may use custom stacks.
@@ -36,6 +37,6 @@ defmodule EoqWeb.Router do
 
   def assign_default_seller(conn, _) do
     conn
-    |> Plug.Conn.assign(:seller_id, "3daa0587-9327-4112-a79a-d5cc1482a52d")
+    |> Plug.Conn.assign(:seller_id, Eoq.Account.default_seller_id())
   end
 end

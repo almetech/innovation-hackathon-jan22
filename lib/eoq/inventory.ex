@@ -91,6 +91,7 @@ defmodule Eoq.Inventory do
         |> Repo.insert!()
 
       create_product_param!(attrs, product.id)
+      product
     end)
   end
 
@@ -290,7 +291,7 @@ defmodule Eoq.Inventory do
   def last_month_orders(product_id) do
     query =
       from o in Order,
-        where: o.date >= ago(500, "day"),
+        where: o.date >= ago(30, "day"),
         where: o.product_id == ^product_id
 
     Repo.all(query)
@@ -304,5 +305,56 @@ defmodule Eoq.Inventory do
         select: pp.product_id
 
     Repo.all(query)
+  end
+
+  def randomize(seller_id) do
+    Repo.delete_all(Product)
+    products = [
+      {"01", "Maggie noodles", 12, 7, 1, 0.5, 0.1, 90},
+      {"02", "Good day cashew cookies", 19, 10, 2, 0.4, 0.05, 93},
+      {"03", "Lays Cream and Onion Flavour Chips", 19, 7, 1, 0.6, 0.06, 94},
+      {"04", "Lays Indian Magic Chips", 19, 7, 1, 0.6, 0.06, 94},
+      {"05", "Bingo Original Style Chips", 9, 7, 1, 0.4, 0.08, 92},
+      {"06", "Kissan Mixed Fruit Jam", 65, 10, 2, 0.6, 0.04, 96},
+      {"07", "Parle G Biscuits", 10, 7, 1, 0.5, 0.03, 97},
+      {"08", "Britannia Little Hearts Biscuits", 10, 7, 1, 0.4, 0.08, 85},
+      {"09", "Apsara Scholars Kit", 232, 15, 3, 0.6, 0.05, 90},
+      {"10", "Reynolds Pen Pack", 60, 15, 3, 0.6, 0.03, 97}
+    ]
+
+    Enum.each(products, fn {id, name, price, review_time_days, lead_time_days, cost_holding,
+                            cost_stockout, service_level} ->
+      {:ok, product} =
+        create_product(
+          %{
+            name: name,
+            external_product_id: id,
+            review_time_days: review_time_days,
+            lead_time_days: lead_time_days,
+            cost_holding: cost_stockout,
+            cost_stockout: cost_holding,
+            service_level: service_level
+          },
+          seller_id
+        )
+
+      create_random_orders(price, id, seller_id, Date.add(Date.utc_today, -30))
+    end)
+  end
+
+  defp create_random_orders(price, external_product_id, seller_id, date) do
+    if Date.diff(date, Date.utc_today) != 0 do
+      qty = Enum.random(30..100)
+      Eoq.Inventory.save_order(
+        %{
+          "price" => price,
+          "quantity" => qty,
+          "date" => Date.to_string(date),
+          "product_id" => external_product_id
+        },
+        seller_id
+      )
+      create_random_orders(price, external_product_id, seller_id, Date.add(date, 1))
+    end
   end
 end

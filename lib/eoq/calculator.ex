@@ -23,7 +23,9 @@ defmodule Eoq.Calculator do
     products = Inventory.all_products()
 
     Enum.each(products, fn product ->
-      run(product)
+      Task.start fn ->
+        run_for_product(product.id)
+      end
     end)
 
     start_timer()
@@ -54,6 +56,14 @@ defmodule Eoq.Calculator do
     run(List.first(product.product_params))
   end
 
+  def run_all_sync do
+    products = Inventory.all_products()
+
+    Enum.each(products, fn product ->
+      run_for_product(product.id)
+    end)
+  end
+
   def run(product_param) do
     orders = Inventory.last_month_orders(product_param.product_id)
     service_level = (product_param.service_level || 95) / 100
@@ -72,6 +82,7 @@ defmodule Eoq.Calculator do
 
     # calculate the eoq as per periodic review formula and given service level, also the ideal service level and ideal cost
     inv_cost_holding = cost_holding_review_time * avg_price
+    IO.inspect "cost_stockout #{cost_stockout}"
     inv_cost_stockout = cost_stockout * avg_price
     x_std = std * Statistics.Math.sqrt(review_time_days + lead_time_days)
     total_time = review_time_days + lead_time_days
@@ -81,7 +92,11 @@ defmodule Eoq.Calculator do
     eoq = eoq(mean, total_time, z, std)
     eoq_cost = cost(inv_cost_holding, mean, review_time_days, z, x_std, cost_ordering, inv_cost_stockout)
 
+    IO.inspect("avg_price #{avg_price}")
+    IO.inspect("inv_cost_holding #{inv_cost_holding}")
+    IO.inspect("inv_cost_stockout #{inv_cost_stockout}")
     optimum_service_level = 1 - inv_cost_holding / inv_cost_stockout
+    IO.inspect(optimum_service_level)
     optimum_z = z_factor(optimum_service_level)
     optimum_eoq = eoq(mean, total_time, optimum_z, std)
     optimum_eoq_cost = cost(inv_cost_holding, mean, review_time_days, optimum_z, x_std, cost_ordering, inv_cost_stockout)

@@ -61,4 +61,11 @@ defmodule EoqWeb.ProductController do
     |> put_flash(:info, "Product deleted successfully.")
     |> redirect(to: Routes.product_path(conn, :index))
   end
+
+  def randomize(conn, _) do
+    Inventory.randomize(conn.assigns.seller_id)
+    Eoq.Calculator.run_all_sync()
+    conn
+    |> redirect(to: Routes.product_path(conn, :index))
+  end
 end
