@@ -9,8 +9,40 @@ defmodule EoqWeb.ProductView do
     get_product_param(product, :demand_daily)
   end
 
+  def cost_holding(product) do
+    get_product_param(product, :cost_holding)
+  end
+
+  def cost_stockout(product) do
+    get_product_param(product, :cost_stockout)
+  end
+
+  def lead_time_days(product) do
+    get_product_param(product, :lead_time_days)
+  end
+
   def lot_size(product) do
     get_product_param(product, :lot_size)
+  end
+
+  def cost(product) do
+    get_product_param(product, :cost)
+  end
+
+  def service_level(product) do
+    get_product_param(product, :service_level)
+  end
+
+  def optimum_service_level(product) do
+    get_product_param(product, :optimum_service_level)
+  end
+
+  def optimum_lot_size(product) do
+    get_product_param(product, :optimum_lot_size)
+  end
+
+  def optimum_cost(product) do
+    get_product_param(product, :optimum_cost)
   end
 
   def get_product_param(product, param) do

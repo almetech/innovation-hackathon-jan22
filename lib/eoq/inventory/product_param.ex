@@ -16,6 +16,10 @@ defmodule Eoq.Inventory.ProductParam do
     field :price, :float
     field :review_time_days, :integer
     field :service_level, :integer
+    field :optimum_service_level, :integer
+    field :optimum_lot_size, :integer
+    field :optimum_cost, :float
+    field :cost, :float
     field :product_id, :binary_id
 
     timestamps()
@@ -24,6 +28,22 @@ defmodule Eoq.Inventory.ProductParam do
   @doc false
   def changeset(product_param, attrs) do
     product_param
-    |> cast(attrs, [:cost_ordering, :cost_holding, :cost_stockout, :price, :demand_cumulative, :demand_daily, :demand_std_deviation, :service_level, :lead_time_days, :review_time_days, :lot_size])
+    |> cast(attrs, [
+      :cost_ordering,
+      :cost_holding,
+      :cost_stockout,
+      :price,
+      :demand_cumulative,
+      :demand_daily,
+      :demand_std_deviation,
+      :service_level,
+      :lead_time_days,
+      :review_time_days,
+      :lot_size,
+      :optimum_service_level,
+      :optimum_lot_size,
+      :optimum_cost,
+      :cost
+    ])
   end
 end

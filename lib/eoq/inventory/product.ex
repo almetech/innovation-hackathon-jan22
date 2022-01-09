@@ -12,6 +12,8 @@ defmodule Eoq.Inventory.Product do
     field :lead_time_days, :integer, virtual: true
     field :review_time_days, :integer, virtual: true
     field :service_level, :integer, virtual: true
+    field :cost_holding, :float, virtual: true
+    field :cost_stockout, :float, virtual: true
 
     has_many :product_params, Eoq.Inventory.ProductParam
 

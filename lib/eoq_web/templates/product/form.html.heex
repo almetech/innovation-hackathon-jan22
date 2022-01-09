@@ -11,12 +11,27 @@
 
   <div class="mt-5">
     <%= label f, :lead_time_days, "Frequency of ordering in days", class: "custom-label block font-bold" %>
-    <%= text_input f, :review_time_days, class: "custom-input w-full" %>
+    <%= number_input f, :review_time_days, class: "custom-input w-full" %>
   </div>
 
   <div class="mt-5">
     <%= label f, :lead_time_days, "Days from order to delivery", class: "custom-label block font-bold" %>
-    <%= text_input f, :lead_time_days, class: "custom-input w-full" %>
+    <%= number_input f, :lead_time_days, class: "custom-input w-full" %>
+  </div>
+
+  <div class="mt-5">
+    <%= label f, :cost_stockout, "Stock-out cost", class: "custom-label block font-bold" %>
+    <%= number_input f, :cost_stockout, class: "custom-input w-full", step: "0.01" %>
+  </div>
+
+  <div class="mt-5">
+    <%= label f, :cost_holding, "Holding cost", class: "custom-label block font-bold" %>
+    <%= number_input f, :cost_holding, class: "custom-input w-full", step: "0.01" %>
+  </div>
+
+  <div class="mt-5">
+    <%= label f, :service_level, "Service level", class: "custom-label block font-bold" %>
+    <%= number_input f, :service_level, class: "custom-input w-full" %>
   </div>
 
   <div>

@@ -7,7 +7,6 @@ defmodule Eoq.Inventory do
   alias Eoq.Repo
 
   alias Eoq.Inventory.{Product, ProductParam, Order}
-  alias Eoq.Account
 
   @doc """
   Returns the list of products.
@@ -21,13 +20,13 @@ defmodule Eoq.Inventory do
   def list_products(seller_id) do
     preload_query =
       from pp in ProductParam,
-      order_by: [desc: :inserted_at],
-      distinct: pp.product_id
+        order_by: [desc: :inserted_at],
+        distinct: pp.product_id
 
     query =
       from p in Product,
-      where: p.seller_id == ^seller_id,
-      preload: [product_params: ^preload_query]
+        where: p.seller_id == ^seller_id,
+        preload: [product_params: ^preload_query]
 
     Repo.all(query)
   end
@@ -35,12 +34,13 @@ defmodule Eoq.Inventory do
   def all_products do
     preload_query =
       from pp in ProductParam,
-      order_by: [desc: :inserted_at],
-      limit: 1
+        order_by: [desc: :inserted_at],
+        limit: 1
 
     query =
       from p in Product,
-      preload: [product_params: ^preload_query]
+        preload: [product_params: ^preload_query]
+
     Repo.all(query)
   end
 
@@ -67,11 +67,20 @@ defmodule Eoq.Inventory do
   def get_product_with_latest_param!(id) do
     preload_query =
       from pp in ProductParam,
-      order_by: [desc: :inserted_at],
-      limit: 1
+        order_by: [desc: :inserted_at],
+        limit: 1
+
     product = Repo.get!(Product, id) |> Repo.preload(product_params: preload_query)
     [product_param] = product.product_params
-    %{product | lead_time_days: product_param.lead_time_days, review_time_days: product_param.review_time_days, service_level: product_param.service_level}
+
+    %{
+      product
+      | lead_time_days: product_param.lead_time_days,
+        review_time_days: product_param.review_time_days,
+        service_level: product_param.service_level,
+        cost_holding: product_param.cost_holding,
+        cost_stockout: product_param.cost_stockout
+    }
   end
 
   def create_product(attrs \\ %{}, seller_id) do
@@ -109,13 +118,14 @@ defmodule Eoq.Inventory do
   end
 
   def create_product_param!(attrs, product_id) do
-    %ProductParam{service_level: 95, product_id: product_id}
+    %ProductParam{product_id: product_id}
     |> ProductParam.changeset(attrs)
     |> Repo.insert!()
   end
 
   def update_product_param!(attrs, product_param_id) do
     product_param = Repo.get!(ProductParam, product_param_id)
+
     product_param
     |> ProductParam.changeset(attrs)
     |> Repo.update!()
@@ -200,14 +210,16 @@ defmodule Eoq.Inventory do
         quantity
       end
 
-
     %Order{product_id: product.id}
     |> Order.changeset(%{
       price: ext_order_params["price"],
       quantity: ext_order_params["quantity"],
       date: date
     })
-    |> Repo.insert(conflict_target: [:product_id, :date], on_conflict: [inc: [quantity: quantity]])
+    |> Repo.insert(
+      conflict_target: [:product_id, :date],
+      on_conflict: [inc: [quantity: quantity]]
+    )
   end
 
   @doc """
@@ -275,13 +287,11 @@ defmodule Eoq.Inventory do
     Order.changeset(order, attrs)
   end
 
-  def last_month_orders(product) do
-    product_id = product.id
-
+  def last_month_orders(product_id) do
     query =
       from o in Order,
-      where: o.date >= ago(30, "day"),
-      where: o.product_id == ^product_id
+        where: o.date >= ago(500, "day"),
+        where: o.product_id == ^product_id
 
     Repo.all(query)
   end
@@ -289,9 +299,9 @@ defmodule Eoq.Inventory do
   def latest_product_params do
     query =
       from pp in ProductParam,
-      where: is_nil(pp.lot_size),
-      distinct: pp.product_id,
-      select: pp.product_id
+        where: is_nil(pp.lot_size),
+        distinct: pp.product_id,
+        select: pp.product_id
 
     Repo.all(query)
   end

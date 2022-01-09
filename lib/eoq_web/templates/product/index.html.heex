@@ -1,9 +1,9 @@
 <h1 class="text-xl font-bold">Products</h1>
 
-<span><%= link "+ Add product", to: Routes.product_path(@conn, :new), class: "custom-button my-5" %></span>
+<span><%= link "+ Add product", to: Routes.product_path(@conn, :new), class: "custom-button my-10" %></span>
 
 <%= for product <- @products do %>
-  <div class="w-full mb-5 lg:max-w-full lg:flex">
+  <div class="w-full mb-10 lg:max-w-full lg:flex">
     <div class="border border-gray-400 bg-white rounded p-4 flex flex-col justify-between leading-normal w-full">
       <div class="mb-8">
         <p class="text-sm text-gray-600 flex items-center">
@@ -18,11 +18,30 @@
           </div>
         </div>
       </div>
-      <div class="flex gap-5">
-        <div class="p-5 bg-pink-300 rounded text-sm font-light">Optimum lot size <span {%{id: "#{product.id}-lot-size"}} class="font-bold"><%= lot_size(product) %></span> units</div>
-        <div class="p-5 bg-purple-300 rounded text-sm font-light">Reorder every <span class="font-bold"><%= review_time_days(product) %></span> days</div>
-        <div class="p-5 bg-blue-300 rounded text-sm font-light">Average demand <span {%{id: "#{product.id}-demand"}} class="font-bold"><%= average_demand(product) %></span> per day</div>
+
+      <div class="gap-5 mb-5 text-sm flex">
+        <div class="bg-gray-100 p-2 rounded"><div>Reorder every</div> <div class="font-bold"><%= review_time_days(product) %> days</div></div>
+        <div class="bg-gray-100 p-2 rounded"><div>Stock delivery time</div> <div class="font-bold"><%= lead_time_days(product) %> days</div></div>
+        <div class="bg-gray-100 p-2 rounded"><div>Holding cost</div> <div class="font-bold"><%= cost_holding(product) %></div></div>
+        <div class="bg-gray-100 p-2 rounded"><div>Stock-out cost</div> <div class="font-bold"><%= cost_stockout(product) %></div></div>
       </div>
+
+      <div class="grid grid-cols-2 gap-5">
+        <div class="p-5 bg-blue-200 rounded text-sm font-light">
+          <div class="text-sm text-gray-600">Configured</div>
+          <div class="font-bold text-lg">Service level <span><%= service_level(product) %></span>%</div>
+          <div>Lot size <span class="font-bold"><%= lot_size(product) %></span></div>
+          <div>Cost <span class="font-bold"><%= cost(product) %></span></div>
+        </div>
+
+        <div class="p-5 bg-pink-200 rounded text-sm font-light">
+          <div class="text-sm text-gray-600">Optimum</div>
+          <div class="font-bold text-lg">Service level <span><%= optimum_service_level(product) %></span>%</div>
+          <div>Lot size <span class="font-bold"><%= optimum_lot_size(product) %></span></div>
+          <div>Cost <span class="font-bold"><%= optimum_cost(product) %></span></div>
+        </div>
+      </div>
+
     </div>
   </div>
 <% end %>

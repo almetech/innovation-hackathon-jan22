@@ -18,7 +18,7 @@ defmodule Eoq.Application do
       EoqWeb.Endpoint,
       # Start a worker by calling: Eoq.Worker.start_link(arg)
       # {Eoq.Worker, arg}
-      Eoq.LotSizeCalculator
+      Eoq.Calculator
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
