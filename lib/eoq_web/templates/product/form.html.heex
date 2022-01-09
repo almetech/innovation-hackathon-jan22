@@ -7,31 +7,42 @@
   <div class="mt-5">
     <%= label f, :external_product_id, "Product ID/SKU", class: "custom-label block font-bold" %>
     <%= text_input f, :external_product_id, class: "custom-input w-full" %>
+    <p class="text-xs text-gray-500 mt-1">Unique identifier for the product in the seller app.</p>
   </div>
 
   <div class="mt-5">
-    <%= label f, :lead_time_days, "Frequency of ordering in days", class: "custom-label block font-bold" %>
+    <%= label f, :lead_time_days, "Ordering frequency (Days)", class: "custom-label block font-bold" %>
     <%= number_input f, :review_time_days, class: "custom-input w-full" %>
+    <p class="text-xs text-gray-500 mt-1">Gap between placing subsequent orders with your distributor.</p>
   </div>
 
   <div class="mt-5">
-    <%= label f, :lead_time_days, "Days from order to delivery", class: "custom-label block font-bold" %>
+    <%= label f, :lead_time_days, "Supply time (Days)", class: "custom-label block font-bold" %>
     <%= number_input f, :lead_time_days, class: "custom-input w-full" %>
+    <p class="text-xs text-gray-500 mt-1">Time for supply to reach you after placing the order.</p>
   </div>
 
   <div class="mt-5">
-    <%= label f, :cost_stockout, "Stock-out cost", class: "custom-label block font-bold" %>
+    <%= label f, :cost_stockout, "Gross margin", class: "custom-label block font-bold" %>
     <%= number_input f, :cost_stockout, class: "custom-input w-full", step: "0.01" %>
+    <p class="text-xs text-gray-500 mt-1">Percentage of the price of the product.</p>
   </div>
 
   <div class="mt-5">
-    <%= label f, :cost_holding, "Holding cost", class: "custom-label block font-bold" %>
+    <%= label f, :cost_holding, "Inventory holding cost", class: "custom-label block font-bold" %>
     <%= number_input f, :cost_holding, class: "custom-input w-full", step: "0.01" %>
+    <p class="text-xs text-gray-500 mt-1">Estimated holding cost of inventory for a month as percentage of price of product.</p>
   </div>
 
   <div class="mt-5">
     <%= label f, :service_level, "Service level", class: "custom-label block font-bold" %>
     <%= number_input f, :service_level, class: "custom-input w-full" %>
+    <p class="text-xs text-gray-500 mt-1">Percentage of customer orders you want to definitely fulfill without running out of stock (Example: 92)</p>
+  </div>
+
+  <div class="mt-5 flex items-center">
+    <%= checkbox f, :randomize_orders, class: "mr-2" %>
+    <%= label f, :randomize_orders, "Generate random order data", class: "custom-label font-bold" %>
   </div>
 
   <div>

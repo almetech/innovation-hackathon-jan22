@@ -79,7 +79,8 @@ defmodule Eoq.Inventory do
         review_time_days: product_param.review_time_days,
         service_level: product_param.service_level,
         cost_holding: product_param.cost_holding,
-        cost_stockout: product_param.cost_stockout
+        cost_stockout: product_param.cost_stockout,
+        price: product_param.price
     }
   end
 
@@ -307,6 +308,18 @@ defmodule Eoq.Inventory do
     Repo.all(query)
   end
 
+  def randomize(product_id, seller_id) do
+    query =
+      from o in Order,
+      where: o.product_id == ^product_id
+
+    Repo.delete_all(query)
+
+    product = get_product!(product_id)
+
+    create_random_orders(100, product.external_product_id, seller_id, Date.add(Date.utc_today, -30))
+  end
+
   def randomize(seller_id) do
     Repo.delete_all(Product)
     products = [
@@ -333,7 +346,8 @@ defmodule Eoq.Inventory do
             lead_time_days: lead_time_days,
             cost_holding: cost_stockout,
             cost_stockout: cost_holding,
-            service_level: service_level
+            service_level: service_level,
+            price: price
           },
           seller_id
         )

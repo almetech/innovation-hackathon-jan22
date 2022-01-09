@@ -2,7 +2,6 @@
 
 <div class="my-10 flex gap-5">
   <%= link "+ Add product", to: Routes.product_path(@conn, :new), class: "custom-button" %>
-  <%= link "Generate random data", to: Routes.product_path(@conn, :randomize), class: "custom-button-secondary-large", method: :post %>
 </div>
 
 <%= for product <- @products do %>
@@ -25,8 +24,9 @@
       <div class="gap-5 mb-5 text-sm flex">
         <div class="bg-gray-100 p-2 rounded"><div>Reorder every</div> <div class="font-bold"><%= review_time_days(product) %> days</div></div>
         <div class="bg-gray-100 p-2 rounded"><div>Stock delivery time</div> <div class="font-bold"><%= lead_time_days(product) %> days</div></div>
-        <div class="bg-gray-100 p-2 rounded"><div>Holding cost</div> <div class="font-bold"><%= cost_holding(product) %></div></div>
-        <div class="bg-gray-100 p-2 rounded"><div>Stock-out cost</div> <div class="font-bold"><%= cost_stockout(product) %></div></div>
+        <div class="bg-gray-100 p-2 rounded"><div>Holding cost</div> <div class="font-bold"><%= cost_holding(product) %>%</div></div>
+        <div class="bg-gray-100 p-2 rounded"><div>Stock-out cost</div> <div class="font-bold"><%= cost_stockout(product) %>%</div></div>
+        <div class="bg-gray-100 p-2 rounded"><div>Price</div> <div class="font-bold"><%= price(product) %></div></div>
       </div>
 
       <div class="grid grid-cols-2 gap-5">

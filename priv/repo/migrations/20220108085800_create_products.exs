@@ -11,7 +11,6 @@ defmodule Eoq.Repo.Migrations.CreateProducts do
       timestamps()
     end
 
-    create index(:products, [:seller_id])
-    create unique_index(:products, [:external_product_id])
+    create unique_index(:products, [:seller_id, :external_product_id])
   end
 end

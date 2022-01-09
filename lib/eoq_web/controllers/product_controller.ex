@@ -18,7 +18,12 @@ defmodule EoqWeb.ProductController do
 
   def create(conn, %{"product" => product_params}) do
     case Inventory.create_product(product_params, conn.assigns.seller_id) do
-      {:ok, _} ->
+      {:ok, product} ->
+        if product_params["randomize_orders"] == "true" do
+          Inventory.randomize(product.id, conn.assigns.seller_id)
+        end
+
+        Eoq.Calculator.run_for_product(product.id)
         conn
         |> put_flash(:info, "Product created successfully.")
         |> redirect(to: Routes.product_path(conn, :index))
@@ -44,6 +49,11 @@ defmodule EoqWeb.ProductController do
 
     case Inventory.update_product(product, product_params) do
       {:ok, _} ->
+        if product_params["randomize_orders"] == "true" do
+          Inventory.randomize(product.id, conn.assigns.seller_id)
+        end
+
+        Eoq.Calculator.run_for_product(product.id)
         conn
         |> put_flash(:info, "Product updated successfully.")
         |> redirect(to: Routes.product_path(conn, :index))

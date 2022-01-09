@@ -5,6 +5,10 @@ defmodule EoqWeb.ProductView do
     get_product_param(product, :review_time_days)
   end
 
+  def price(product) do
+    get_product_param(product, :price)
+  end
+
   def average_demand(product) do
     get_product_param(product, :demand_daily)
   end

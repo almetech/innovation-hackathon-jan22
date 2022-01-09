@@ -14,6 +14,7 @@ defmodule Eoq.Inventory.Product do
     field :service_level, :integer, virtual: true
     field :cost_holding, :float, virtual: true
     field :cost_stockout, :float, virtual: true
+    field :price, :float, virtual: true
 
     has_many :product_params, Eoq.Inventory.ProductParam
 

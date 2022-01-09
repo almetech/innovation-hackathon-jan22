@@ -66,12 +66,19 @@ defmodule Eoq.Calculator do
 
   def run(product_param) do
     orders = Inventory.last_month_orders(product_param.product_id)
+
+    if orders != [] do
+      do_run(product_param, orders)
+    end
+  end
+
+  def do_run(product_param, orders) do
     service_level = (product_param.service_level || 95) / 100
     review_time_days = product_param.review_time_days || 7
     lead_time_days = product_param.lead_time_days || 1
-    cost_holding = product_param.cost_holding || 0.1 # Holding cost per day
+    cost_holding = (product_param.cost_holding || 10) / 100 # Holding cost per day
     cost_holding_review_time = cost_holding * review_time_days / 30
-    cost_stockout = product_param.cost_stockout || 0.1
+    cost_stockout = (product_param.cost_stockout || 20) / 100
     cost_ordering = product_param.cost_ordering || 30
 
     quantities = Enum.map(orders, & &1.quantity)
@@ -82,7 +89,6 @@ defmodule Eoq.Calculator do
 
     # calculate the eoq as per periodic review formula and given service level, also the ideal service level and ideal cost
     inv_cost_holding = cost_holding_review_time * avg_price
-    IO.inspect "cost_stockout #{cost_stockout}"
     inv_cost_stockout = cost_stockout * avg_price
     x_std = std * Statistics.Math.sqrt(review_time_days + lead_time_days)
     total_time = review_time_days + lead_time_days
@@ -92,11 +98,7 @@ defmodule Eoq.Calculator do
     eoq = eoq(mean, total_time, z, std)
     eoq_cost = cost(inv_cost_holding, mean, review_time_days, z, x_std, cost_ordering, inv_cost_stockout)
 
-    IO.inspect("avg_price #{avg_price}")
-    IO.inspect("inv_cost_holding #{inv_cost_holding}")
-    IO.inspect("inv_cost_stockout #{inv_cost_stockout}")
     optimum_service_level = 1 - inv_cost_holding / inv_cost_stockout
-    IO.inspect(optimum_service_level)
     optimum_z = z_factor(optimum_service_level)
     optimum_eoq = eoq(mean, total_time, optimum_z, std)
     optimum_eoq_cost = cost(inv_cost_holding, mean, review_time_days, optimum_z, x_std, cost_ordering, inv_cost_stockout)
@@ -108,6 +110,7 @@ defmodule Eoq.Calculator do
       optimum_service_level: round(optimum_service_level * 100),
       optimum_lot_size: optimum_eoq,
       optimum_cost: optimum_eoq_cost,
+      price: avg_price
     }
 
     save_params(product_param, params)
@@ -138,7 +141,7 @@ defmodule Eoq.Calculator do
     avg_cost_holding = cost_holding * (avg_demand * review_time_days/2 + x_std * z)
     avg_cost_ordering = cost_ordering / review_time_days
     avg_cost_stockout = cost_stockout * x_std * normal_loss_standard(z) / cost_holding
-    Float.round(avg_cost_holding + avg_cost_ordering + avg_cost_stockout, 2)
+    round(avg_cost_holding + avg_cost_ordering + avg_cost_stockout)
   end
 
   def z_factor(confidence_level) do
