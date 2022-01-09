@@ -10,10 +10,11 @@ defmodule EoqWeb.Api.ProductController do
   #   "product": {
   #     "id": string, // Product ID or SKU in the seller app.
   #     "name": string, // Product name.
-  #     "seller_id": string, // Seller ID in the seller app.
   #     "service_level": integer, // Service level, example: 95
   #     "lead_time_days": integer, // Delivery time after placing inventory orders
-  #     "review_time_days": integer // Frequency of ordering inventory in days
+  #     "review_time_days": integer, // Frequency of ordering inventory in days
+  #     "cost_holding": float, // Estimated holding cost of inventory for a month as percentage of price of product.
+  #     "cost_stockout": float // Percentage of the price of the product.
   #   }
   # }
   def create(conn, %{"product" => product_params}) do
@@ -29,10 +30,11 @@ defmodule EoqWeb.Api.ProductController do
   #   "id": string, // Product ID or SKU in the seller app.
   #   "product": {
   #     "name": string, // Product name.
-  #     "seller_id": string, // Seller ID in the seller app.
   #     "service_level": integer, // Service level, example: 95
   #     "lead_time_days": integer, // Delivery time after placing inventory orders
-  #     "review_time_days": integer // Frequency of ordering inventory in days
+  #     "review_time_days": integer, // Frequency of ordering inventory in days
+  #     "cost_holding": float, // Estimated holding cost of inventory for a month as percentage of price of product.
+  #     "cost_stockout": float // Percentage of the price of the product.
   #   }
   # }
   def update(conn, %{"id" => id, "product" => product_params}) do
